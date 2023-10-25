@@ -11,7 +11,7 @@
 		{/each}
 	</div>
 	<div class="flex-1 h-full justify-between flex flex-row">
-		<div class="bg-surface-500 w-72 h-full"></div>
+		<div class="bg-surface-500 w-72 h-full"><button></button></div>
 		<div class="flex-1 bg-surface-600 h-full"></div>
 		<div class="w-72 h-full"></div>
 	</div>
