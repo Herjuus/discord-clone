@@ -28,7 +28,7 @@
         "icons/icon.icns",
         "icons/icon.ico"
       ],
-      "identifier": "com.tauri.dev",
+      "identifier": "me.herjus.chatapp",
       "longDescription": "",
       "macOS": {
         "entitlements": null,
@@ -58,7 +58,9 @@
         "height": 800,
         "resizable": true,
         "title": "Discord",
-        "width": 1000
+        "width": 1000,
+        "minHeight": 600,
+        "minWidth": 800
       }
     ]
   }

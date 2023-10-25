@@ -43,7 +43,7 @@
 						Invalid password
 					</span>
 				</div>
-				<button type="submit" class="btn rounded variant-filled-primary text-tertiary-500 text-sm w-min">{#if loading}
+				<button disabled={loading} type="submit" class="btn rounded variant-filled-primary text-tertiary-500 text-sm w-min">{#if loading}
 					Signing in...
 					{:else}
 					Sign in
