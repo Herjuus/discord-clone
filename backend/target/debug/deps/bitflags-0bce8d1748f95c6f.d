@@ -1,0 +1,11 @@
+/Users/herjus/Repositories/discord/backend/target/debug/deps/bitflags-0bce8d1748f95c6f.rmeta: /Users/herjus/.cargo/registry/src/index.crates.io-6f17d22bba15001f/bitflags-2.4.1/src/lib.rs /Users/herjus/.cargo/registry/src/index.crates.io-6f17d22bba15001f/bitflags-2.4.1/src/iter.rs /Users/herjus/.cargo/registry/src/index.crates.io-6f17d22bba15001f/bitflags-2.4.1/src/parser.rs /Users/herjus/.cargo/registry/src/index.crates.io-6f17d22bba15001f/bitflags-2.4.1/src/traits.rs /Users/herjus/.cargo/registry/src/index.crates.io-6f17d22bba15001f/bitflags-2.4.1/src/public.rs /Users/herjus/.cargo/registry/src/index.crates.io-6f17d22bba15001f/bitflags-2.4.1/src/internal.rs /Users/herjus/.cargo/registry/src/index.crates.io-6f17d22bba15001f/bitflags-2.4.1/src/external.rs
+
+/Users/herjus/Repositories/discord/backend/target/debug/deps/bitflags-0bce8d1748f95c6f.d: /Users/herjus/.cargo/registry/src/index.crates.io-6f17d22bba15001f/bitflags-2.4.1/src/lib.rs /Users/herjus/.cargo/registry/src/index.crates.io-6f17d22bba15001f/bitflags-2.4.1/src/iter.rs /Users/herjus/.cargo/registry/src/index.crates.io-6f17d22bba15001f/bitflags-2.4.1/src/parser.rs /Users/herjus/.cargo/registry/src/index.crates.io-6f17d22bba15001f/bitflags-2.4.1/src/traits.rs /Users/herjus/.cargo/registry/src/index.crates.io-6f17d22bba15001f/bitflags-2.4.1/src/public.rs /Users/herjus/.cargo/registry/src/index.crates.io-6f17d22bba15001f/bitflags-2.4.1/src/internal.rs /Users/herjus/.cargo/registry/src/index.crates.io-6f17d22bba15001f/bitflags-2.4.1/src/external.rs
+
+/Users/herjus/.cargo/registry/src/index.crates.io-6f17d22bba15001f/bitflags-2.4.1/src/lib.rs:
+/Users/herjus/.cargo/registry/src/index.crates.io-6f17d22bba15001f/bitflags-2.4.1/src/iter.rs:
+/Users/herjus/.cargo/registry/src/index.crates.io-6f17d22bba15001f/bitflags-2.4.1/src/parser.rs:
+/Users/herjus/.cargo/registry/src/index.crates.io-6f17d22bba15001f/bitflags-2.4.1/src/traits.rs:
+/Users/herjus/.cargo/registry/src/index.crates.io-6f17d22bba15001f/bitflags-2.4.1/src/public.rs:
+/Users/herjus/.cargo/registry/src/index.crates.io-6f17d22bba15001f/bitflags-2.4.1/src/internal.rs:
+/Users/herjus/.cargo/registry/src/index.crates.io-6f17d22bba15001f/bitflags-2.4.1/src/external.rs:
