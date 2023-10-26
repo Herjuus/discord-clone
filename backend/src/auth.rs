@@ -1,12 +1,9 @@
 use axum::{
-    routing::{get, post},
     http::StatusCode,
-    response::IntoResponse,
-    Json, Router,
+    Json,
 };
 use pwhash::bcrypt;
 use serde::{Deserialize, Serialize};
-use std::net::SocketAddr;
 
 pub async fn register_user(Json(payload): Json<CreateUser>) -> (StatusCode, Json<User>) {
     // let hash = bcrypt

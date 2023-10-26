@@ -8,7 +8,6 @@ use axum::{
 #[tokio::main]
 async fn main(){
     let app = Router::new()
-        .route("/", get(|| async { "Hello, World!" }))
         .route("/register", post(auth::register_user));
 
     axum::Server::bind(&"0.0.0.0:8080".parse().unwrap())
