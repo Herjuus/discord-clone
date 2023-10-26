@@ -1,3 +1,5 @@
+mod jwt;
+
 use axum::{
     http::StatusCode,
     Json,
@@ -6,18 +8,12 @@ use pwhash::bcrypt;
 use serde::{Deserialize, Serialize};
 
 pub async fn register_user(Json(payload): Json<CreateUser>) -> (StatusCode, Json<User>) {
-    // let hash = bcrypt
-
-    let pass = payload.password.clone();
-
     let user = User {
         id: 1234,
         username: payload.username,
         email: payload.email,
         hashed_password: bcrypt::hash(payload.password).unwrap(),
     };
-
-    // assert_eq!(bcrypt::verify(pass, user.hashed_password.as_str()), true);
 
     (StatusCode::CREATED, Json(user))
 }
@@ -37,13 +33,36 @@ pub struct User {
     hashed_password: String,
 }
 
+// pub async fn sign_in(Json(payload): Json<SignInUser>) -> Json<SignInReturn>{
+//     let ret = SignInReturn {
+//         token: "lol".to_string(),
+//         message: "ok".to_string(),
+//     };
+// }
+
+#[derive(Deserialize)]
+pub struct SignInUser {
+    email: String,
+    password: String,
+}
+
+#[derive(Serialize)]
+pub struct SignInReturn {
+    token: String,
+    message: String,
+}
+
 pub async fn validate(Json(payload): Json<ValidateUser>) -> (StatusCode, Json<ValidatedUser>) {
 
     let res = ValidatedUser {
         validated: bcrypt::verify(payload.password, payload.hashed_password.as_str())
     };
 
-    (StatusCode::OK, Json(res))
+    if res.validated {
+        (StatusCode::OK, Json(res))
+    } else {
+        (StatusCode::BAD_REQUEST, Json(res))
+    }
 }
 
 #[derive(Deserialize)]
