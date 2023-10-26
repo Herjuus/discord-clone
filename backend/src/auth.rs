@@ -6,6 +6,7 @@ use axum::{
 };
 use pwhash::bcrypt;
 use serde::{Deserialize, Serialize};
+use crate::db::CLIENT;
 
 pub async fn register_user(Json(payload): Json<CreateUser>) -> (StatusCode, Json<User>) {
     let user = User {
@@ -34,6 +35,8 @@ pub struct User {
 }
 
 // pub async fn sign_in(Json(payload): Json<SignInUser>) -> Json<SignInReturn>{
+//     let client = &*CLIENT;
+//
 //     let ret = SignInReturn {
 //         token: "lol".to_string(),
 //         message: "ok".to_string(),
