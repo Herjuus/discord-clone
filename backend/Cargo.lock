@@ -489,6 +489,7 @@ dependencies = [
  "dotenv",
  "jsonwebtoken",
  "libsql-client",
+ "once_cell",
  "pwhash",
  "serde",
  "tokio",
