@@ -1,23 +1,18 @@
-use actix_web::{get, post, web, App, HttpResponse, HttpServer, Responder};
+mod auth;
 
-#[get("/")]
-async fn hello() -> impl Responder {
-    HttpResponse::Ok().body("Hello world!")
-}
+use axum::{
+    routing::get, routing::post,
+    Router,
+};
 
-#[post("/echo")]
-async fn echo(req_body: String) -> impl Responder {
-    HttpResponse::Ok().body(req_body)
-}
+#[tokio::main]
+async fn main(){
+    let app = Router::new()
+        .route("/", get(|| async { "Hello, World!" }))
+        .route("/register", post(auth::register_user));
 
-#[actix_web::main]
-async fn main() -> std::io::Result<()> {
-    HttpServer::new(|| {
-        App::new()
-            .service(hello)
-            .service(echo)
-    })
-        .bind(("127.0.0.1", 8080))?
-        .run()
+    axum::Server::bind(&"0.0.0.0:8080".parse().unwrap())
+        .serve(app.into_make_service())
         .await
+        .unwrap();
 }
