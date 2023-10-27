@@ -488,6 +488,7 @@ dependencies = [
  "bcrypt",
  "dotenv",
  "jsonwebtoken",
+ "lazy_static",
  "libsql-client",
  "once_cell",
  "pwhash",

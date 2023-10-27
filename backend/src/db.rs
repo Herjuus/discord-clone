@@ -1,9 +1,12 @@
-use libsql_client::Client;
-use once_cell::sync::Lazy;
+use lazy_static::lazy_static;
+use libsql_client::{Client, Config};
 
-pub static CLIENT: Lazy<Client> = Lazy::new(|| {
-    libsql_client::Client::from_config(libsql_client::Config {
-        url: url::Url::parse(&*std::env::var("DATABASE_URL").expect("DATABASE_URL must be set.")).unwrap(),
-        auth_token: None,
-    })
-});
+lazy_static! {
+    pub static ref CLIENT: Client = {
+        let config = Config {
+            url: url::Url::parse(std::env::var("DATABASE_URL").expect("DATABASE_URL must be set.")).unwrap(),
+            auth_token: None,
+        };
+        Client::from_config(config).await.unwrap()
+    };
+}

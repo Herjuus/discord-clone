@@ -16,3 +16,4 @@ serde = { version = "1.0.190", features = ["derive"] }
 tokio = { version = "1", features = ["full"] }
 url = "2.4.1"
 once_cell = { version = "1.18.0", features = [] }
+lazy_static = "1.4.0"
