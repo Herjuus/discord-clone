@@ -7,7 +7,6 @@ use axum::{
     Router,
 };
 use dotenv::dotenv;
-use once_cell::sync::Lazy;
 
 #[tokio::main]
 async fn main(){
