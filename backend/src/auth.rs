@@ -1,13 +1,11 @@
 mod jwt;
 
-use axum::{
-    http::StatusCode,
-    Json,
-};
+use axum::{Extension, http::StatusCode, Json};
 use pwhash::bcrypt;
+use sea_orm::DatabaseConnection;
 use serde::{Deserialize, Serialize};
 
-pub async fn register_user(Json(payload): Json<CreateUser>) -> (StatusCode, Json<User>) {
+pub async fn register_user(Json(payload): Json<CreateUser>, Extension(database): Extension<DatabaseConnection>) -> (StatusCode, Json<User>) {
     let user = User {
         id: 1234,
         username: payload.username,
@@ -27,7 +25,7 @@ pub struct CreateUser {
 
 #[derive(Serialize)]
 pub struct User {
-    id: u64,
+    id: i32,
     username: String,
     email: String,
     hashed_password: String,
