@@ -1,5 +1,5 @@
 mod auth;
-mod db;
+mod lib;
 use std::string::ToString;
 use std::sync::Mutex;
 use axum::{
@@ -7,10 +7,12 @@ use axum::{
     Router,
 };
 use dotenv::dotenv;
+use discord_backend::run_database;
 
 #[tokio::main]
 async fn main(){
     dotenv().ok();
+    run_database().await;
 
     let app = Router::new()
         .route("/register", post(auth::register_user))
