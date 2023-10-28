@@ -11,6 +11,7 @@ bcrypt = "0.15.0"
 dotenv = "0.15.0"
 jsonwebtoken = "9.1.0"
 pwhash = "1.0.0"
+sea-orm = { version = "0.12.4", features = ["sqlx-mysql", "runtime-tokio-rustls"] }
 serde = { version = "1.0.190", features = ["derive"] }
 tokio = { version = "1", features = ["full"] }
 url = "2.4.1"

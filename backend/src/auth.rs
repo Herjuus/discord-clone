@@ -13,7 +13,7 @@ pub async fn register_user(Json(payload): Json<CreateUser>) -> (StatusCode, Json
         username: payload.username,
         email: payload.email,
         hashed_password: bcrypt::hash(payload.password).unwrap(),
-    };
+    };a
 
     (StatusCode::CREATED, Json(user))
 }
