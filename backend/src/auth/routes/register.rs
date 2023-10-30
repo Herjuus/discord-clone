@@ -3,18 +3,23 @@ use axum::Json;
 use serde::{Deserialize, Serialize};
 use crate::Tx;
 use pwhash::bcrypt;
+use crate::auth::error::DbError;
 
-pub async fn register_user(mut tx: Tx, Json(payload): Json<Request>) -> (StatusCode, Json<User>) {
+pub async fn register_user(mut tx: Tx, Json(payload): Json<Request>) -> Result<(StatusCode), (DbError)> {
     let user = User {
-        id: 1234,
         username: payload.username,
         email: payload.email,
         hashed_password: bcrypt::hash(payload.password).unwrap(),
     };
 
-    
+    let result = sqlx::query(
+        "INSERT INTO users (username, email, hashed_password) VALUES (?, ?, ?)")
+        .bind(user.username)
+        .bind(user.email)
+        .bind(user.hashed_password)
+        .execute(&mut tx).await?;
 
-    (StatusCode::CREATED, Json(user))
+    Ok((StatusCode::OK))
 }
 
 #[derive(Deserialize)]
@@ -26,7 +31,6 @@ pub struct Request {
 
 #[derive(Serialize)]
 pub struct User {
-    id: i32,
     username: String,
     email: String,
     hashed_password: String,
