@@ -8,7 +8,7 @@ use std::error::Error;
 use sqlx::mysql::MySqlPoolOptions;
 use sqlx::MySqlPool;
 
-pub type DB = axum_sqlx_tx::Tx<sqlx::MySql>;
+pub type Tx = axum_sqlx_tx::Tx<sqlx::MySql>;
 
 #[tokio::main]
 async fn main() -> Result<(), Box<dyn Error>> {

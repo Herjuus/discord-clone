@@ -1,22 +1,23 @@
 mod jwt;
+mod error;
 
 use std::error::Error;
-use axum::{Extension, http::StatusCode, Json};
+use axum::{debug_handler, Extension, http::StatusCode, Json};
+use axum::response::IntoResponse;
 use pwhash::bcrypt;
 use serde::{Deserialize, Serialize};
-use crate::DB;
+use crate::{Tx};
 
-pub async fn get_users(mut db: DB) -> Result<(StatusCode, Json<Vec<User>>), DbError> {
+#[debug_handler]
+pub async fn get_users(mut tx: Tx) -> Result<(StatusCode, Json<Vec<User>>), error::DbError> {
     let users = sqlx::query_as!(User, "SELECT * FROM users")
-        .fetch_all(&mut db)
+        .fetch_all(&mut tx)
         .await?;
 
     Ok((StatusCode::OK, Json(users)))
 }
 
-struct DbError(sqlx::Error);
-
-pub async fn register_user(mut db: DB, Json(payload): Json<CreateUser>) -> (StatusCode, Json<User>) {
+pub async fn register_user(mut tx: Tx, Json(payload): Json<CreateUser>) -> (StatusCode, Json<User>) {
     let user = User {
         id: 1234,
         username: payload.username,
