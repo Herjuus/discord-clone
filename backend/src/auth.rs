@@ -1,5 +1,6 @@
 mod jwt;
 mod error;
+pub mod routes;
 
 use std::error::Error;
 use axum::{debug_handler, Extension, http::StatusCode, Json};
@@ -8,31 +9,12 @@ use pwhash::bcrypt;
 use serde::{Deserialize, Serialize};
 use crate::{Tx};
 
-#[debug_handler]
 pub async fn get_users(mut tx: Tx) -> Result<(StatusCode, Json<Vec<User>>), error::DbError> {
     let users = sqlx::query_as!(User, "SELECT * FROM users")
         .fetch_all(&mut tx)
         .await?;
 
     Ok((StatusCode::OK, Json(users)))
-}
-
-pub async fn register_user(mut tx: Tx, Json(payload): Json<CreateUser>) -> (StatusCode, Json<User>) {
-    let user = User {
-        id: 1234,
-        username: payload.username,
-        email: payload.email,
-        hashed_password: bcrypt::hash(payload.password).unwrap(),
-    };
-
-    (StatusCode::CREATED, Json(user))
-}
-
-#[derive(Deserialize)]
-pub struct CreateUser {
-    username: String,
-    email: String,
-    password: String,
 }
 
 #[derive(Serialize)]

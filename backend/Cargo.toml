@@ -7,7 +7,6 @@ edition = "2021"
 
 [dependencies]
 axum = { version = "0.6.20", features = ["default", "http1", "http2", "macros"] }
-bcrypt = "0.15.0"
 dotenv = "0.15.0"
 jsonwebtoken = "9.1.0"
 pwhash = "1.0.0"

@@ -21,7 +21,7 @@ async fn main() -> Result<(), Box<dyn Error>> {
     let pool = MySqlPool::connect(std::env::var("DATABASE_URL").unwrap().as_str()).await?;
 
     let app = Router::new()
-        .route("/register", post(auth::register_user))
+        .route("/register", post(auth::routes::register::register_user))
         .route("/validate", post(auth::validate))
         .route("/getusers", get(auth::get_users))
         .layer(axum_sqlx_tx::Layer::new(pool.clone()));
