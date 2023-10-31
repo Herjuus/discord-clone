@@ -1,13 +1,12 @@
 mod jwt;
-mod error;
 pub mod routes;
 
 use std::error::Error;
-use axum::{debug_handler, Extension, http::StatusCode, Json};
+use axum::{http::StatusCode, Json};
 use axum::response::IntoResponse;
 use pwhash::bcrypt;
 use serde::{Deserialize, Serialize};
-use crate::{Tx};
+use crate::{error, Tx};
 
 pub async fn get_users(mut tx: Tx) -> Result<(StatusCode, Json<Vec<User>>), error::DbError> {
     let users = sqlx::query_as!(User, "SELECT * FROM users")

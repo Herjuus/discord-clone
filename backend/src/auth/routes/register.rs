@@ -1,11 +1,12 @@
 use axum::http::StatusCode;
 use axum::Json;
+use axum::response::IntoResponse;
 use serde::{Deserialize, Serialize};
 use crate::Tx;
 use pwhash::bcrypt;
-use crate::auth::error::DbError;
+use crate::error::DbError;
 
-pub async fn register_user(mut tx: Tx, Json(payload): Json<Request>) -> Result<(StatusCode), (DbError)> {
+pub async fn register_user(mut tx: Tx, Json(payload): Json<Request>) -> Result<(StatusCode, String), DbError> {
     let user = User {
         username: payload.username,
         email: payload.email,
@@ -19,7 +20,13 @@ pub async fn register_user(mut tx: Tx, Json(payload): Json<Request>) -> Result<(
         .bind(user.hashed_password)
         .execute(&mut tx).await?;
 
-    Ok((StatusCode::OK))
+    Ok((StatusCode::OK, "Successfully registered".to_string()))
+}
+
+impl IntoResponse for DbError {
+    fn into_response(self) -> axum::response::Response {
+        (StatusCode::INTERNAL_SERVER_ERROR, "Username and/or email already in use.").into_response()
+    }
 }
 
 #[derive(Deserialize)]
