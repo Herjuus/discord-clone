@@ -9,9 +9,9 @@ impl From<sqlx::Error> for DbError {
     }
 }
 
-// impl IntoResponse for DbError {
-//     fn into_response(self) -> axum::response::Response {
-//         println!("ERROR: {}", self.0);
-//         (StatusCode::INTERNAL_SERVER_ERROR, "internal server error").into_response()
-//     }
-// }
+impl IntoResponse for DbError {
+    fn into_response(self) -> axum::response::Response {
+        println!("ERROR: {}", self.0);
+        (StatusCode::INTERNAL_SERVER_ERROR, "internal server error").into_response()
+    }
+}

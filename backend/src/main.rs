@@ -20,6 +20,7 @@ async fn main() -> Result<(), Box<dyn Error>> {
         .route("/register", post(auth::routes::register::register_user))
         .route("/validate", post(auth::validate))
         .route("/getusers", get(auth::get_users))
+        .route("/login", post(auth::routes::login::login_user))
         .layer(axum_sqlx_tx::Layer::new(pool.clone()));
 
     axum::Server::bind(&"0.0.0.0:8080".parse().unwrap())

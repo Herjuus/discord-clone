@@ -23,12 +23,6 @@ pub async fn register_user(mut tx: Tx, Json(payload): Json<Request>) -> Result<(
     Ok((StatusCode::OK, "Successfully registered".to_string()))
 }
 
-impl IntoResponse for DbError {
-    fn into_response(self) -> axum::response::Response {
-        (StatusCode::INTERNAL_SERVER_ERROR, "Username and/or email already in use.").into_response()
-    }
-}
-
 #[derive(Deserialize)]
 pub struct Request {
     username: String,
