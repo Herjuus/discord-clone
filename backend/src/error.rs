@@ -4,9 +4,7 @@ use axum::response::IntoResponse;
 pub struct DbError(sqlx::Error);
 
 impl From<sqlx::Error> for DbError {
-    fn from(error: sqlx::Error) -> Self {
-        Self(error)
-    }
+    fn from(error: sqlx::Error) -> Self { Self(error) }
 }
 
 impl IntoResponse for DbError {

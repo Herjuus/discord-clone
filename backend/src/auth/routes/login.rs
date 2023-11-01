@@ -1,10 +1,11 @@
 use axum::http::StatusCode;
-use axum::Json;
+use axum::{debug_handler, Json};
 use axum::response::IntoResponse;
 use serde::{Deserialize, Serialize};
 use crate::error::DbError;
 use crate::Tx;
 use pwhash::bcrypt;
+use sqlx::Error;
 
 struct User {
     id: i32,
@@ -13,12 +14,19 @@ struct User {
     hashed_password: String,
 }
 
-pub async fn login_user(mut tx: Tx, Json(payload): Json<Request>) -> Result<(StatusCode, Json<Return>), (StatusCode, String)> {
-    let user = sqlx::query_as!(User, "SELECT * FROM users WHERE email = ?", payload.email)
+async fn login_user_sql(mut tx: Tx, Json(payload): Json<Request>) -> Result<User, DbError> {
+    let user = sqlx::query_as!(User, "SELECT * FROM users WHERE email = ?", payload.email.clone())
         .fetch_one(&mut tx)
         .await?;
 
-    let correct_password = bcrypt::verify(payload.password, user.hashed_password.as_str());
+    return Ok(user);
+}
+
+// #[debug_handler]
+pub async fn login_user(mut tx: Tx, Json(payload): Json<Request>) -> Result<(StatusCode, Json<Return>), (StatusCode, String)> {
+    let user = login_user_sql(tx, Json(payload)).await?;
+
+    let correct_password = bcrypt::verify(payload.password.clone(), user.hashed_password.as_str());
 
     if !correct_password {
         return Err((StatusCode::BAD_REQUEST, "Wrong password.".to_string()))
