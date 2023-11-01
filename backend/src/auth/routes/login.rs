@@ -5,6 +5,7 @@ use serde::{Deserialize, Serialize};
 use crate::error::DbError;
 use crate::Tx;
 use pwhash::bcrypt;
+use serde::de::Unexpected::Option;
 use sqlx::Error;
 
 struct User {
@@ -14,22 +15,17 @@ struct User {
     hashed_password: String,
 }
 
-async fn login_user_sql(mut tx: Tx, Json(payload): Json<Request>) -> Result<User, DbError> {
-    let user = sqlx::query_as!(User, "SELECT * FROM users WHERE email = ?", payload.email.clone())
+// #[debug_handler]
+pub async fn login_user(mut tx: Tx, Json(payload): Json<Request>) -> Result<(StatusCode, Json<Return>), DbError> {
+    let user = sqlx::query_as!(User, "SELECT * FROM users WHERE email = ?", payload.email)
         .fetch_one(&mut tx)
         .await?;
 
-    return Ok(user);
-}
-
-// #[debug_handler]
-pub async fn login_user(mut tx: Tx, Json(payload): Json<Request>) -> Result<(StatusCode, Json<Return>), (StatusCode, String)> {
-    let user = login_user_sql(tx, Json(payload)).await?;
-
-    let correct_password = bcrypt::verify(payload.password.clone(), user.hashed_password.as_str());
+    let correct_password = bcrypt::verify(payload.password, user.hashed_password.as_str());
 
     if !correct_password {
-        return Err((StatusCode::BAD_REQUEST, "Wrong password.".to_string()))
+        // return Ok((StatusCode::BAD_REQUEST))
+        return Err()
     }
 
     let return_object = Return {
