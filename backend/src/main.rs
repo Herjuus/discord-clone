@@ -20,7 +20,8 @@ async fn main() -> Result<(), Box<dyn Error>> {
         .route("/register", post(auth::routes::register::register_user))
         .route("/login", post(auth::routes::login::login_user))
         .route("/validate", post(auth::validate))
-        .route("/get_users", get(auth::get_users));
+        .route("/get_users", get(auth::get_users))
+        .route("/validate-token", post(auth::validate_token));
 
     let app = Router::new()
         .nest("/auth", auth_routes)

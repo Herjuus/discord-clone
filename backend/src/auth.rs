@@ -8,6 +8,7 @@ use axum::response::IntoResponse;
 use pwhash::bcrypt;
 use serde::{Deserialize, Serialize};
 use crate::{error, Tx};
+use crate::auth::jwt::validate_user_token;
 
 pub async fn get_users(mut tx: Tx) -> Result<(StatusCode, Json<Vec<User>>), (StatusCode, String)> {
     let users = sqlx::query_as!(User, "SELECT * FROM users")
@@ -48,4 +49,16 @@ pub struct ValidateUser {
 #[derive(Serialize)]
 pub struct ValidatedUser {
     validated: bool,
+}
+
+
+pub async fn validate_token(Json(payload): Json<ValidateToken>) -> Result<Json<bool>, (StatusCode, String)>{
+    let validated = validate_user_token(payload.token.as_str())?;
+
+    Ok(Json(validated))
+}
+
+#[derive(Deserialize)]
+pub struct ValidateToken {
+    token: String,
 }

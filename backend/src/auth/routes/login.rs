@@ -18,10 +18,10 @@ pub async fn login_user(mut tx: Tx, Json(payload): Json<Request>) -> Result<(Sta
         return Err((StatusCode::BAD_REQUEST, "Wrong password.".to_string()))
     }
 
-    let token = generate_user_token(user.id);
+    let token = generate_user_token(user.id).unwrap();
 
     let return_object = Return {
-        token: "".to_string(),
+        token,
         message: "Logged in.".to_string(),
     };
 
