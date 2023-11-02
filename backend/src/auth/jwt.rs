@@ -24,7 +24,7 @@ pub fn generate_user_token(uid: i32) -> Result<String, StatusCode> {
 
     let key = EncodingKey::from_secret(std::env::var("JWT_SECRET").unwrap().as_ref());
 
-    encode(&Header::default(), &claims, &key).map_err(|err| StatusCode::INTERNAL_SERVER_ERROR)
+    encode(&Header::default(), &claims, &key).map_err(|e| StatusCode::INTERNAL_SERVER_ERROR)
 }
 
 pub fn validate_user_token(token: &str) -> Result<bool, (StatusCode, String)> {
