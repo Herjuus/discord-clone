@@ -5,6 +5,7 @@ use serde::{Deserialize, Serialize};
 use crate::error;
 use crate::Tx;
 use pwhash::bcrypt;
+use crate::auth::jwt::generate_user_token;
 
 pub async fn login_user(mut tx: Tx, Json(payload): Json<Request>) -> Result<(StatusCode, Json<Return>), (StatusCode, String)> {
     let user = sqlx::query_as!(User, "SELECT * FROM users WHERE email = ?", payload.email)
@@ -16,6 +17,8 @@ pub async fn login_user(mut tx: Tx, Json(payload): Json<Request>) -> Result<(Sta
     if !correct_password {
         return Err((StatusCode::BAD_REQUEST, "Wrong password.".to_string()))
     }
+
+    let token = generate_user_token(user.id);
 
     let return_object = Return {
         token: "".to_string(),

@@ -16,11 +16,14 @@ async fn main() -> Result<(), Box<dyn Error>> {
 
     let pool = MySqlPool::connect(std::env::var("DATABASE_URL").unwrap().as_str()).await?;
 
-    let app = Router::new()
+    let auth_routes = Router::new()
         .route("/register", post(auth::routes::register::register_user))
-        .route("/validate", post(auth::validate))
-        .route("/getusers", get(auth::get_users))
         .route("/login", post(auth::routes::login::login_user))
+        .route("/validate", post(auth::validate))
+        .route("/get_users", get(auth::get_users));
+
+    let app = Router::new()
+        .nest("/auth", auth_routes)
         .layer(axum_sqlx_tx::Layer::new(pool.clone()));
 
     axum::Server::bind(&"0.0.0.0:8080".parse().unwrap())

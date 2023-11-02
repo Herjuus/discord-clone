@@ -18,5 +18,5 @@ pub fn register_error<E>(err: E) -> (StatusCode, String)
     where
         E: std::error::Error,
 {
-    (StatusCode::IN, "User with these credentials already exists.".to_string())
+    (StatusCode::NOT_ACCEPTABLE, "User with these credentials already exists.".to_string())
 }
