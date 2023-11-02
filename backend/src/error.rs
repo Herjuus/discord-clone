@@ -11,7 +11,7 @@ pub fn login_error<E>(err: E) -> (StatusCode, String)
     where
         E: std::error::Error,
 {
-    (StatusCode::NOT_FOUND, "No user found with specified mail.".to_string())
+    (StatusCode::NOT_FOUND, "User with specified mail doesnt exist.".to_string())
 }
 
 pub fn register_error<E>(err: E) -> (StatusCode, String)
