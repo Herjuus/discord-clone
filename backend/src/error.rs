@@ -1,28 +1,22 @@
-use std::convert::Infallible;
-use axum::body::Full;
 use axum::http::StatusCode;
-use axum::response::IntoResponse;
 
-// pub struct DbError(sqlx::Error);
-//
-// impl From<sqlx::Error> for DbError {
-//     fn from(error: sqlx::Error) -> Self { Self(error) }
-// }
-//
-// impl IntoResponse for DbError {
-//     fn into_response(self) -> axum::response::Response {
-//         println!("ERROR: {}", self.0);
-//         (StatusCode::INTERNAL_SERVER_ERROR, "internal server error").into_response()
-//     }
-// }
-
-pub enum tError {
-    DBError(String),
-    ActumError(String),
-    NotFound(String),
+pub fn internal_error<E>(err: E) -> (StatusCode, String)
+    where
+        E: std::error::Error,
+{
+    (StatusCode::INTERNAL_SERVER_ERROR, err.to_string())
 }
 
-impl IntoResponse for tError {
-    type Body = Full<Bytes>;
-    type BodyError = Infallible;
+pub fn login_error<E>(err: E) -> (StatusCode, String)
+    where
+        E: std::error::Error,
+{
+    (StatusCode::NOT_FOUND, "No user found with specified mail.".to_string())
+}
+
+pub fn register_error<E>(err: E) -> (StatusCode, String)
+    where
+        E: std::error::Error,
+{
+    (StatusCode::IN, "User with these credentials already exists.".to_string())
 }

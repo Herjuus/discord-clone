@@ -1,12 +1,13 @@
 use axum::http::StatusCode;
 use axum::{debug_handler, Json};
+use axum::body::HttpBody;
 use axum::response::IntoResponse;
 use serde::{Deserialize, Serialize};
 use crate::Tx;
 use pwhash::bcrypt;
-use crate::error::DbError;
+use crate::error;
 
-pub async fn register_user(mut tx: Tx, Json(payload): Json<Request>) -> Result<(StatusCode, String), DbError> {
+pub async fn register_user(mut tx: Tx, Json(payload): Json<Request>) -> Result<(StatusCode, String), (StatusCode, String)> {
     let user = User {
         username: payload.username,
         email: payload.email,
@@ -18,9 +19,10 @@ pub async fn register_user(mut tx: Tx, Json(payload): Json<Request>) -> Result<(
         .bind(user.username)
         .bind(user.email)
         .bind(user.hashed_password)
-        .execute(&mut tx).await?;
+        .execute(&mut tx)
+        .await.map_err(error::register_error)?;
 
-    Ok((StatusCode::OK, "Successfully registered".to_string()))
+    Ok((StatusCode::CREATED, "Successfully registered".to_string()))
 }
 
 #[derive(Deserialize)]

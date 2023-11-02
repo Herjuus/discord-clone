@@ -1,6 +1,6 @@
 mod auth;
 mod lib;
-mod error;
+pub mod error;
 
 use std::string::ToString;
 use axum::{Router, routing::get, routing::post};
