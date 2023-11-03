@@ -15,7 +15,7 @@ pub async fn login_user(mut tx: Tx, Json(payload): Json<Request>) -> Result<(Sta
     let correct_password = bcrypt::verify(payload.password, user.hashed_password.as_str());
 
     if !correct_password {
-        return Err((StatusCode::BAD_REQUEST, "Wrong password.".to_string()))
+        return Err((StatusCode::BAD_REQUEST, "Incorrect password.".to_string()))
     }
 
     let token = generate_user_token(user.id).unwrap();

@@ -1,12 +1,13 @@
 mod auth;
 mod lib;
 pub mod error;
+mod db;
 
 use std::string::ToString;
 use axum::{Router, routing::get, routing::post};
 use dotenv::dotenv;
 use std::error::Error;
-use sqlx::MySqlPool;
+use crate::db::db_pool;
 
 pub type Tx = axum_sqlx_tx::Tx<sqlx::MySql>;
 
@@ -14,7 +15,7 @@ pub type Tx = axum_sqlx_tx::Tx<sqlx::MySql>;
 async fn main() -> Result<(), Box<dyn Error>> {
     dotenv().ok();
 
-    let pool = MySqlPool::connect(std::env::var("DATABASE_URL").unwrap().as_str()).await?;
+    let pool = db_pool().await;
 
     let auth_routes = Router::new()
         .route("/register", post(auth::routes::register::register_user))

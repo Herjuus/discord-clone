@@ -1,5 +1,6 @@
 mod jwt;
 pub mod routes;
+mod middleware;
 
 use std::error::Error;
 use axum::{http::StatusCode, Json};
@@ -13,7 +14,6 @@ use crate::auth::jwt::validate_user_token;
 pub async fn get_users(mut tx: Tx) -> Result<(StatusCode, Json<Vec<User>>), (StatusCode, String)> {
     let users = sqlx::query_as!(User, "SELECT * FROM users")
         .fetch_all(&mut tx)
-        // .await.map_err(error::internal_error)
         .await.map_err(error::internal_error)?;
 
     Ok((StatusCode::OK, Json(users)))
