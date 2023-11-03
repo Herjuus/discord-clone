@@ -21,7 +21,11 @@ pub async fn jwt_middleware<T>(mut req: Request<T>, next: Next<T>) -> Result<Res
         (StatusCode::UNAUTHORIZED, "No token provided".to_string())
     })?;
 
-    let token_validated = validate_user_token(token.as_str());
+    let token_validated: bool = validate_user_token(token.as_str())?;
+
+    if !token_validated {
+        (StatusCode::UNAUTHORIZED, "".to_string())
+    }
 
     Ok(next.run(req).await)
 }
