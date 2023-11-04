@@ -37,7 +37,7 @@ pub async fn validate_user_token(token: &str) -> Result<bool, (StatusCode, Strin
         }))?;
 
     let user = sqlx::query_as!(User, "SELECT * FROM users WHERE id = ?", decoded_token.claims.user_id)
-        .fetch_one(pool)
+        .fetch_one(&pool)
         .await
         .map_err((StatusCode::UNAUTHORIZED, "Invalid token.".to_string()))?;
 
