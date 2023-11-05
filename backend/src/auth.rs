@@ -52,11 +52,11 @@ pub struct ValidatedUser {
 }
 
 
-pub async fn validate_token(Json(payload): Json<ValidateToken>) -> Result<(StatusCode, String), (StatusCode, String)>{
-    let validated = validate_user_token(payload.token.as_str()).await?;
-
-    Ok((StatusCode::ACCEPTED, "Authorized.".to_string()))
-}
+// pub async fn validate_token(Json(payload): Json<ValidateToken>) -> Result<(StatusCode, String), (StatusCode, String)>{
+//     let validated = validate_user_token(payload.token.as_str()).await?;
+//
+//     Ok((StatusCode::ACCEPTED, "Authorized.".to_string()))
+// }
 
 #[derive(Deserialize)]
 pub struct ValidateToken {

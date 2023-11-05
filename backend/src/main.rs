@@ -26,8 +26,8 @@ async fn main() -> Result<(), Box<dyn Error>> {
         .route_layer(from_fn(jwt_middleware))
         .route("/register", post(auth::routes::register::register_user))
         .route("/login", post(auth::routes::login::login_user))
-        .route("/validate", post(auth::validate))
-        .route("/validate-token", post(auth::validate_token));
+        .route("/validate", post(auth::validate));
+        // .route("/validate-token", post(auth::validate_token));
 
     let app = Router::new()
         .nest("/auth", auth_routes)
