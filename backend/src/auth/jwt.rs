@@ -4,7 +4,6 @@ use chrono::{Duration, Utc};
 use jsonwebtoken::{encode, Algorithm, Header, EncodingKey, decode, DecodingKey, Validation};
 use serde::{Deserialize, Serialize};
 use crate::auth::User;
-use crate::db::db_pool;
 
 #[derive(Serialize, Deserialize)]
 struct Claims {
@@ -28,7 +27,7 @@ pub fn generate_user_token(uid: i32) -> Result<String, StatusCode> {
 }
 
 pub async fn validate_user_token(token: &str) -> Result<bool, (StatusCode, String)> {
-    let pool = db_pool().await;
+    // let pool = db_pool().await;
 
     let decoded_token = decode::<Claims>(&token, &DecodingKey::from_secret(std::env::var("JWT_SECRET").unwrap().as_ref()), &Validation::new(Algorithm::HS256))
         .map_err(|e| (StatusCode::UNAUTHORIZED, match e.to_string().as_str() {
@@ -36,10 +35,10 @@ pub async fn validate_user_token(token: &str) -> Result<bool, (StatusCode, Strin
             _ => {"Invalid token.".to_string()}
         }))?;
 
-    let user = sqlx::query_as!(User, "SELECT * FROM users WHERE id = ?", decoded_token.claims.user_id)
-        .fetch_one(&pool)
-        .await
-        .map_err((StatusCode::UNAUTHORIZED, "Invalid token.".to_string()))?;
+    // let user = sqlx::query_as!(User, "SELECT * FROM users WHERE id = ?", decoded_token.claims.user_id)
+    //     .fetch_one(&pool)
+    //     .await
+    //     .map_err((StatusCode::UNAUTHORIZED, "Invalid token.".to_string()))?;
 
     Ok(true)
 }

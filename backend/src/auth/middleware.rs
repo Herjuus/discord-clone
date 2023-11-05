@@ -1,4 +1,3 @@
-use std::any::Any;
 use axum::http::{Request, StatusCode};
 use axum::http::header::AUTHORIZATION;
 use axum::middleware::Next;
@@ -21,7 +20,11 @@ pub async fn jwt_middleware<T>(mut req: Request<T>, next: Next<T>) -> Result<Res
         (StatusCode::UNAUTHORIZED, "No token provided".to_string())
     })?;
 
-    let token_validated = validate_user_token(token.as_str()).await;
+    let token_validated = validate_user_token(token.as_str()).await?;
+
+    if !token_validated {
+        return Err((StatusCode::UNAUTHORIZED, "Invalid token.".to_string()))
+    }
 
     Ok(next.run(req).await)
 }
