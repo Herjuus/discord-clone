@@ -1,12 +1,16 @@
 <script lang="ts">
 	import '../app.postcss';
-
-	// Floating UI for Popups
 	import { computePosition, autoUpdate, flip, shift, offset, arrow } from '@floating-ui/dom';
 	import { storePopup } from '@skeletonlabs/skeleton';
 	storePopup.set({ computePosition, autoUpdate, flip, shift, offset, arrow });
 
-	let loggedIn: boolean = false;
+	import { invoke } from '@tauri-apps/api';
+
+	setTimeout(() => {
+		invoke('close_splashscreen');
+	}, 3000);
+
+	let loggedIn: boolean = true;
 	let loading: boolean = false;
 
 	function handleSignin(e: Event) {
