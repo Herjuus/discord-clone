@@ -6,16 +6,17 @@ use crate::error;
 use crate::Tx;
 use pwhash::bcrypt;
 use crate::auth::jwt::generate_user_token;
+use crate::error::ApiError;
 
-pub async fn login_user(mut tx: Tx, Json(payload): Json<Request>) -> Result<(StatusCode, Json<Return>), (StatusCode, String)> {
+pub async fn login_user(mut tx: Tx, Json(payload): Json<Request>) -> Result<(StatusCode, Json<Return>), ApiError> {
     let user = sqlx::query_as!(User, "SELECT * FROM users WHERE email = ?", payload.email)
         .fetch_one(&mut tx)
-        .await.map_err(error::login_error)?;
+        .await.map_err(|e| ApiError { status_code: StatusCode::NOT_FOUND, message: "Incorrect email.".to_string() })?;
 
     let correct_password = bcrypt::verify(payload.password, user.hashed_password.as_str());
 
     if !correct_password {
-        return Err((StatusCode::BAD_REQUEST, "Incorrect password.".to_string()))
+        return Err(ApiError { status_code: StatusCode::NOT_ACCEPTABLE, message: "Incorrect password.".to_string() })
     }
 
     let token = generate_user_token(user.id).unwrap();

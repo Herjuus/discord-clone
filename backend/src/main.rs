@@ -7,11 +7,10 @@ use axum::{Router, routing::get, routing::post};
 use dotenv::dotenv;
 use std::error::Error;
 use axum::body::HttpBody;
-use axum::http::StatusCode;
 use axum::middleware::from_fn;
 use sqlx::MySqlPool;
 use crate::auth::middleware::jwt_middleware;
-use crate::error::internal_error;
+use crate::auth::routes::auth_routes;
 
 pub type Tx = axum_sqlx_tx::Tx<sqlx::MySql>;
 
@@ -21,16 +20,8 @@ async fn main() -> Result<(), Box<dyn Error>> {
 
     let pool = MySqlPool::connect(std::env::var("DATABASE_URL").unwrap().as_str()).await?;
 
-    let auth_routes = Router::new()
-        .route("/get_users", get(auth::get_users))
-        .route_layer(from_fn(jwt_middleware))
-        .route("/register", post(auth::routes::register::register_user))
-        .route("/login", post(auth::routes::login::login_user))
-        .route("/validate", post(auth::validate));
-        // .route("/validate-token", post(auth::validate_token));
-
     let app = Router::new()
-        .nest("/auth", auth_routes)
+        .nest("/auth", auth_routes())
         .layer(axum_sqlx_tx::Layer::new(pool.clone()));
 
     axum::Server::bind(&"0.0.0.0:8080".parse().unwrap())

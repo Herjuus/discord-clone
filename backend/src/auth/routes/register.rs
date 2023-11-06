@@ -5,8 +5,9 @@ use serde::{Deserialize, Serialize};
 use crate::Tx;
 use pwhash::bcrypt;
 use crate::error;
+use crate::error::ApiError;
 
-pub async fn register_user(mut tx: Tx, Json(payload): Json<Request>) -> Result<(StatusCode, String), (StatusCode, String)> {
+pub async fn register_user(mut tx: Tx, Json(payload): Json<Request>) -> Result<(StatusCode, String), ApiError> {
     let user = User {
         username: payload.username,
         email: payload.email,
@@ -19,7 +20,7 @@ pub async fn register_user(mut tx: Tx, Json(payload): Json<Request>) -> Result<(
         .bind(user.email)
         .bind(user.hashed_password)
         .execute(&mut tx)
-        .await.map_err(error::register_error)?;
+        .await.map_err(|e| ApiError { status_code: StatusCode::NOT_ACCEPTABLE, message: "User with these credentials already exists.".to_string() })?;
 
     Ok((StatusCode::CREATED, "Successfully registered".to_string()))
 }
