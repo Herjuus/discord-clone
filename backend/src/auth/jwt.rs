@@ -5,7 +5,7 @@ use jsonwebtoken::{encode, Algorithm, Header, EncodingKey, decode, DecodingKey, 
 use serde::{Deserialize, Serialize};
 use sqlx::MySqlPool;
 use crate::auth::User;
-use crate::error;
+use crate::{error, Tx};
 use crate::error::ApiError;
 
 #[derive(Serialize, Deserialize)]
@@ -29,7 +29,7 @@ pub fn generate_user_token(uid: i32) -> Result<String, ApiError> {
     encode(&Header::default(), &claims, &key).map_err(|e| ApiError { status_code: StatusCode::INTERNAL_SERVER_ERROR, message: "Could not create a user token.".to_string() })
 }
 
-pub async fn validate_user_token(token: &str, pool: MySqlPool) -> Result<User, ApiError> {
+pub async fn validate_user_token(token: &str, tx: &mut Tx) -> Result<User, ApiError> {
     let decoded_token = decode::<Claims>(&token, &DecodingKey::from_secret(std::env::var("JWT_SECRET").unwrap().as_ref()), &Validation::new(Algorithm::HS256))
         .map_err(|e| ApiError { status_code: StatusCode::UNAUTHORIZED, message: match e.to_string().as_str() {
             "ExpiredSignature" => {"Token expired.".to_string()},
@@ -37,7 +37,7 @@ pub async fn validate_user_token(token: &str, pool: MySqlPool) -> Result<User, A
         }})?;
 
     let user = sqlx::query_as!(User, "SELECT * FROM users WHERE id = ?", decoded_token.claims.user_id)
-        .fetch_one(&pool)
+        .fetch_one(tx)
         .await
         .map_err(|e| ApiError { status_code: StatusCode::UNAUTHORIZED, message: "No user found with this token.".to_string() })?;
 
