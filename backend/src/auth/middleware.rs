@@ -1,14 +1,17 @@
+use axum::body::HttpBody;
 use axum::http::{Request, StatusCode};
 use axum::http::header::AUTHORIZATION;
 use axum::middleware::Next;
 use axum::response::Response;
-use sqlx::MySqlPool;
+use sqlx::{MySql, MySqlPool, Pool};
 use crate::auth::jwt::validate_user_token;
-use crate::error::db_error;
+use crate::error;
+use crate::error::ApiError;
+use crate::Tx;
 
-pub async fn jwt_middleware<T>(mut req: Request<T>, next: Next<T>) -> Result<Response, (StatusCode, String)> {
+pub async fn jwt_middleware<T>(mut req: Request<T>, next: Next<T>, mut tx: Tx) -> Result<Response, ApiError> {
     let db_pool = req.extensions().get::<MySqlPool>()
-        .ok_or(db_error)?.to_owned();
+        .ok_or(ApiError { status_code: StatusCode::INTERNAL_SERVER_ERROR, message: "Could not connect to the database.".to_string() })?;
 
     let token = req.headers()
         .get(AUTHORIZATION)
@@ -22,14 +25,11 @@ pub async fn jwt_middleware<T>(mut req: Request<T>, next: Next<T>) -> Result<Res
         });
 
     let token = token.ok_or_else(|| {
-        return Err((StatusCode::UNAUTHORIZED, "No token provided".to_string()))
-    })?;
+        return Err(ApiError { status_code: StatusCode::UNAUTHORIZED, message: "No token provided.".to_string() })
+    }).map_err(|e: Result<T, ApiError>| ApiError { status_code: StatusCode::UNAUTHORIZED, message: "No token provided.".to_string() })?;
 
-    let token_validated = validate_user_token(token.as_str(), db_pool).await?;
+    let user = validate_user_token(token.as_str(), db_pool.clone()).await?;
 
-    if !token_validated {
-        return Err((StatusCode::UNAUTHORIZED, "Invalid token.".to_string()))
-    }
-
+    req.extensions_mut().insert(user);
     Ok(next.run(req).await)
 }
