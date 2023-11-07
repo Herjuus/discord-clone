@@ -10,7 +10,7 @@
 		invoke('close_splashscreen');
 	}, 3000);
 
-	let loggedIn: boolean = true;
+	let loggedIn: boolean = false;
 	let loading: boolean = false;
 
 	function handleSignin(e: Event) {
