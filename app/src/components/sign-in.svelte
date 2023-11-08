@@ -10,7 +10,8 @@
 		e.preventDefault();
         loading = true;
         invoke('handle_sign_in', { email: email, password: password })
-        .then((message) => {
+        .then((res) => {
+            console.log(res);
             loading = false;
         })
         .catch((err) => {
