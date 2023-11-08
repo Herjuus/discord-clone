@@ -1,5 +1,4 @@
 <script lang="ts">
-    import axios from "axios";
     import { invoke } from "@tauri-apps/api";
 
     let loading: boolean = false;
@@ -7,26 +6,18 @@
     let email = "";
     let password = "";
 
-    let error = null;
-    let response = null;
-
     async function handleSignin(e: Event) {
 		e.preventDefault();
-		loading = true;
-
-
-        const res = await axios.post(("http://localhost:8080/auth/login"), {
-            email,
-            password,
+        loading = true;
+        invoke('handle_sign_in', { email: email, password: password })
+        .then((message) => {
+            loading = false;
         })
-            .then(res => {
-                response = res;
-            })
-            .catch(err => {
-                console.log(err);
-                error = err;
-                return null;
-            })
+        .catch((err) => {
+            loading = false;
+        }).finally(() => {
+            loading = false;
+        })
 	}
 </script>
 
