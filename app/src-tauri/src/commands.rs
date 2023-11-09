@@ -8,7 +8,7 @@ pub async fn close_splashscreen(window: Window) {
     window.get_window("main").expect("no window labeled 'main' found").show().unwrap();
 }
 #[tauri::command]
-pub async fn handle_sign_in(email: String, password: String) -> Result<Response, String> {
+pub async fn handle_sign_in(email: String, password: String) -> Result<String, String> {
     let client = reqwest::Client::new();
 
     let mut map = HashMap::new();
@@ -20,5 +20,7 @@ pub async fn handle_sign_in(email: String, password: String) -> Result<Response,
         .send()
         .await.map_err(|e| "Request failed".to_string())?;
 
-    res.into()
+    println!("{}", res.text().await.map_err(|e| "Failed to transform into string".to_string())?);
+
+    Ok(res.text().await.map_err(|e| "Failed to transform into string".to_string())?)
 }
