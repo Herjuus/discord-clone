@@ -1,5 +1,8 @@
 <script lang="ts">
+    import { getToastStore, type ToastSettings } from "@skeletonlabs/skeleton";
     import { invoke } from "@tauri-apps/api";
+
+    const toastStore = getToastStore();
 
     let loading: boolean = false;
 
@@ -11,11 +14,21 @@
         loading = true;
         invoke('handle_sign_in', { email: email, password: password })
         .then((res) => {
+            const t: ToastSettings = {
+                message: res as string,
+                background: 'variant-filled-primary',
+            };
+            toastStore.trigger(t);
             console.log(res);
             loading = false;
         })
         .catch((err) => {
             console.log(err);
+            const t: ToastSettings = {
+                message: err as string,
+                background: 'variant-filled-error',
+            };
+            toastStore.trigger(t);
             loading = false;
         }).finally(() => {
             loading = false;
