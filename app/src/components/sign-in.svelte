@@ -16,10 +16,10 @@
         .then((res) => {
             const t: ToastSettings = {
                 message: res as string,
-                background: 'variant-filled-primary',
+                background: 'variant-filled-success',
             };
             toastStore.trigger(t);
-            console.log(res);
+            console.log(res as string);
             loading = false;
         })
         .catch((err) => {

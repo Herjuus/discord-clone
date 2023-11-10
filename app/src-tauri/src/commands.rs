@@ -10,7 +10,7 @@ pub async fn close_splashscreen(window: Window) {
 }
 
 #[tauri::command]
-pub async fn handle_sign_in(email: String, password: String) -> Result<String, String> {
+pub async fn handle_sign_in(email: String, password: String) -> Result<serde_json::Value, serde_json::Value> {
     let client = reqwest::Client::new();
 
     let mut map = HashMap::new();
@@ -26,11 +26,11 @@ pub async fn handle_sign_in(email: String, password: String) -> Result<String, S
 
     let json: serde_json::Value = res.json().await.map_err(|_e| "Failed to transform into json".to_string())?;
 
-    println!("{}", json);
+    let message: serde_json::Value = json["Message"].clone().into();
 
     if status != StatusCode::OK {
-        return Err(json["Message"].to_string());
+        return Err(message);
     }
 
-    Ok(json["message"].to_string())
+    Ok(message)
 }

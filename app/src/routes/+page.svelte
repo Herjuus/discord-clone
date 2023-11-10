@@ -6,7 +6,6 @@
     import { store } from '$lib/store';
     import { onMount } from 'svelte';
 	
-	let error = null;
 	let validated = false;
 
 	onMount(() => {
