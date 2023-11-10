@@ -22,8 +22,8 @@ pub async fn login_user(mut tx: Tx, Json(payload): Json<Request>) -> Result<(Sta
     let token = generate_user_token(user.id).unwrap();
 
     let return_object = Return {
-        token,
-        message: "Logged in.".to_string(),
+        Token: token,
+        Message: "Logged in.".to_string(),
     };
 
     Ok((StatusCode::OK, Json(return_object)))
@@ -44,6 +44,6 @@ pub struct Request {
 
 #[derive(Serialize)]
 pub struct Return {
-    token: String,
-    message: String,
+    Token: String,
+    Message: String,
 }
