@@ -1,4 +1,5 @@
 <script lang="ts">
+    import { validated } from "$lib/stores/ValidateStore";
     import { getToastStore, type ToastSettings } from "@skeletonlabs/skeleton";
     import { invoke } from "@tauri-apps/api";
 
@@ -21,6 +22,7 @@
             toastStore.trigger(t);
             console.log(res as string);
             loading = false;
+            $validated = true;
         })
         .catch((err) => {
             console.log(err);

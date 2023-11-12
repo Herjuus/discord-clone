@@ -5,8 +5,7 @@
 	import axios from 'axios';
     import { store } from '$lib/store';
     import { onMount } from 'svelte';
-	
-	let validated = false;
+	import { validated } from "$lib/stores/ValidateStore"
 
 	onMount(() => {
 		invoke('close_splashscreen');
@@ -14,7 +13,7 @@
 
 </script>
 
-{#if validated}
+{#if $validated}
 		<Main />
 	{:else}
 		<SignIn />
