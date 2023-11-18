@@ -1,6 +1,5 @@
 use std::collections::HashMap;
 use reqwest::{Response, StatusCode};
-use serde::{Deserialize, Serialize};
 use tauri::{Manager, Window};
 
 #[tauri::command]

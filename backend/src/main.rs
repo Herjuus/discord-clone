@@ -9,6 +9,7 @@ use std::error::Error;
 use axum::body::HttpBody;
 use axum::middleware::from_fn;
 use sqlx::MySqlPool;
+use axum_analytics::Analytics;
 use crate::auth::middleware::jwt_middleware;
 use crate::auth::routes::auth_routes;
 
@@ -22,6 +23,7 @@ async fn main() -> Result<(), Box<dyn Error>> {
 
     let app = Router::new()
         .nest("/auth", auth_routes())
+        .layer(Analytics::new(std::env::var("ANALYTICS_TOKEN").unwrap()))
         .layer(axum_sqlx_tx::Layer::new(pool.clone()));
 
     axum::Server::bind(&"0.0.0.0:8080".parse().unwrap())
