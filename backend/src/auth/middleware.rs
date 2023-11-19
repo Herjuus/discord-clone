@@ -3,7 +3,7 @@ use axum::http::{Request, StatusCode};
 use axum::http::header::AUTHORIZATION;
 use axum::middleware::Next;
 use axum::response::Response;
-use sqlx::{MySql, MySqlPool, Pool};
+use sqlx::{Postgres, PgPool, Pool};
 use crate::auth::jwt::validate_user_token;
 use crate::error;
 use crate::error::ApiError;

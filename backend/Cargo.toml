@@ -13,9 +13,7 @@ pwhash = "1.0.0"
 serde = { version = "1.0.190", features = ["derive"] }
 tokio = { version = "1", features = ["full"] }
 url = "2.4.1"
-sqlx = { version = "0.7", features = [ "runtime-tokio", "tls-rustls", "mysql" ] }
-axum-sqlx-tx = { version = "0.6.0", features = [ "mysql" ] }
+sqlx = { version = "0.7", features = [ "runtime-tokio", "tls-rustls", "postgres" ] }
+axum-sqlx-tx = { version = "0.6.0", features = [ "postgres" ] }
 chrono = "0.4.31"
 serde_json = "1.0.108"
-axum-analytics = "1.1.2"
-

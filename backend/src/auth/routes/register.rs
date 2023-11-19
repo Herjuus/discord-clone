@@ -15,7 +15,7 @@ pub async fn register_user(mut tx: Tx, Json(payload): Json<Request>) -> Result<(
     };
 
     let result = sqlx::query(
-        "INSERT INTO users (username, email, hashed_password) VALUES (?, ?, ?)")
+        "INSERT INTO users (username, email, hashed_password) VALUES ($1, $2, $3)")
         .bind(user.username)
         .bind(user.email)
         .bind(user.hashed_password)

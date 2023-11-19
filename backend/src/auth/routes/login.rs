@@ -9,7 +9,7 @@ use crate::auth::jwt::generate_user_token;
 use crate::error::ApiError;
 
 pub async fn login_user(mut tx: Tx, Json(payload): Json<Request>) -> Result<(StatusCode, Json<Return>), ApiError> {
-    let user = sqlx::query_as!(User, "SELECT * FROM users WHERE email = ?", payload.email)
+    let user = sqlx::query_as!(User, "SELECT * FROM users WHERE email = $1", payload.email)
         .fetch_one(&mut tx)
         .await.map_err(|e| ApiError { status_code: StatusCode::NOT_FOUND, message: "Incorrect email.".to_string() })?;
 
