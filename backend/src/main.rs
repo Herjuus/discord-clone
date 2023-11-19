@@ -23,7 +23,6 @@ async fn main() -> Result<(), Box<dyn Error>> {
 
     let app = Router::new()
         .nest("/auth", auth_routes())
-        .layer(Analytics::new(std::env::var("ANALYTICS_TOKEN").unwrap()))
         .layer(axum_sqlx_tx::Layer::new(pool.clone()));
 
     axum::Server::bind(&"0.0.0.0:8080".parse().unwrap())
