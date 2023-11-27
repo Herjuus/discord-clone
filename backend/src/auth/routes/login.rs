@@ -18,7 +18,7 @@ pub async fn login_user(mut tx: Tx, Json(payload): Json<Request>) -> Result<(Sta
     if !correct_password {
         return Err(ApiError { status_code: StatusCode::NOT_ACCEPTABLE, message: "Incorrect password.".to_string() })
     }
-
+ 
     let token = generate_user_token(user.id).unwrap();
 
     let return_object = Return {
